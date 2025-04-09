@@ -39,12 +39,12 @@ class AnalisadorLexico():
         tokens = []
 
         # Verifica strings primeiro
-        for match in re.finditer(REGEXES["STRING"], linha):
+        for match in re.finditer(REGEXES["STRING"], linha):  # verifica se acho uma srting "exemplo"
             tokens.append(("STRING", match.group(), linha_num, coluna)) # aqui vai retornar a parete que correspondeu ao regex, ou seja dentro de ('...') ou ("...")
-            linha = linha.replace(match.group(), " ", 1)  # Evita capturar duas vezes
+            linha = linha.replace(match.group(), " ", 1)  #  remove a primeira ocorrência da string na linha para ir olhando uma por vez 
 
         # Quebra a linha em partes (palavras e símbolos)
-        partes = re.findall(r'[\w]+|:=|==|>=|<=|<>|[^\s]', linha)
+        partes = re.findall(r'[\w]+|:=|==|>=|<=|<>|[^\s]', linha) # exmeplo ['if', 'a', '<=', 'b', 'then', 'c', ':=', 'a', '+', 'b', ';']
 
         for parte in partes:
             token = self.identificar_token(parte)
@@ -54,7 +54,7 @@ class AnalisadorLexico():
         return tokens
 
     def identificar_token(self, parte):
-        for categoria, simbolos in TOKENS.items():
+        for categoria, simbolos in TOKENS.items():  # aqui to lendo categoria por categoria dos TOKENS
             if isinstance(simbolos, dict):
                 if parte in simbolos:
                     return simbolos[parte]
@@ -69,6 +69,6 @@ class AnalisadorLexico():
         if re.match(REGEXES["DECIMAL"], parte):
             return "DECIMAL"
         if re.match(REGEXES["IDENTIFICADOR"], parte):
-            return TOKENS["PALAVRAS_RESERVADAS"].get(parte, "IDENTIFICADOR")
+            return TOKENS["PALAVRAS_RESERVADAS"].get(parte, "IDENTIFICADOR")  #verica se tem parte em palavras reservadas, se n tive ele retorna identificador
 
         return "TOKEN_DESCONHECIDO"
